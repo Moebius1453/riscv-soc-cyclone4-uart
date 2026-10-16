@@ -14,9 +14,16 @@ always @(posedge clk or negedge rst_n) begin
         interval_cnt <= 26'd0;
         tx_data      <= 8'h41;
         tx_start     <= 1'b0;
+		  
     end else begin
         tx_start <= 1'b0;
-
+			if (tx_start && !tx_busy) begin
+						 if (tx_data == 8'h41) begin
+							  tx_data <= 8'h42;
+						 end else begin
+							  tx_data <= 8'h41;
+						 end
+					end
         if (interval_cnt == 26'd49999999) begin
             interval_cnt <= 26'd0;
 
