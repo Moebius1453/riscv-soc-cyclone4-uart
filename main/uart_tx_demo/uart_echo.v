@@ -27,7 +27,6 @@ always @(posedge clk or negedge rst_n)begin
 		end else begin
 			tx_start <= 1'b0;
 				if (rx_valid && !tx_busy) begin
-					tx_data <= rx_data; 
 					tx_data  <= rx_data;
 					tx_start <= 1'b1;
 		end	
