@@ -2,7 +2,7 @@ module alu_tb;
 
 reg  [7:0] a;
 reg  [7:0] b;
-reg        op;
+reg  [1:0] op;
 wire [7:0] result;
 
 alu u_alu (
