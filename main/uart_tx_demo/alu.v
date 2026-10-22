@@ -2,7 +2,8 @@ module alu (
     input  wire [7:0] a,
     input  wire [7:0] b,
     input wire  [1:0] op,
-    output reg  [7:0] result
+    output reg  [7:0] result,
+	 output wire zero
 );
 
 always @(*) begin
@@ -13,5 +14,7 @@ always @(*) begin
         default: result = 8'd0;
     endcase
 end
+
+assign zero = (result == 8'd0);
 
 endmodule

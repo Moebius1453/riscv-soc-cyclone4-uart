@@ -4,12 +4,14 @@ reg  [7:0] a;
 reg  [7:0] b;
 reg  [1:0] op;
 wire [7:0] result;
+wire zero;
 
 alu u_alu (
     .a      (a),
     .b      (b),
     .op     (op),
-    .result (result)
+    .result (result),
+	 .zero (zero)
 );
 
 initial begin
@@ -30,6 +32,9 @@ initial begin
 
 	 op = 2'b11;
 	 #10 $display("unused op = %0d", result);
+	 
+	 a = 8'd5; b = 8'd5; op = 2'b10;
+	 #10 $display("5 + 3 = %0d, zero = %0b", result, zero);
 
     $finish;
 end
