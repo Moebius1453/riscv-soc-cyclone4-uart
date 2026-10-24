@@ -34,7 +34,10 @@ initial begin
 	 #10 $display("unused op = %0d", result);
 	 
 	 a = 8'd5; b = 8'd5; op = 2'b10;
-	 #10 $display("5 + 3 = %0d, zero = %0b", result, zero);
+	 #10 $display("5 - 5 = %0d, zero = %0b", result, zero);
+
+	 b = 8'd3;
+	 #10 $display("5 - 3 = %0d, zero = %0b", result, zero);
 
     $finish;
 end
