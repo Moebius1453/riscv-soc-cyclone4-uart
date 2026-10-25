@@ -1,0 +1,34 @@
+set_global_assignment -name FAMILY "Cyclone IV E"
+set_global_assignment -name DEVICE EP4CE6E22C8
+set_global_assignment -name TOP_LEVEL_ENTITY task3_sim
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION "13.0 SP1"
+set_global_assignment -name LAST_QUARTUS_VERSION "13.0 SP1"
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+set_global_assignment -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "As output driving ground"
+set_global_assignment -name BDF_FILE task3_sim.bdf
+set_global_assignment -name SDC_FILE task3_sim.sdc
+set_location_assignment PIN_70 -to SW0
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW0
+set_location_assignment PIN_71 -to SW1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW1
+set_location_assignment PIN_72 -to SW2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SW2
+set_location_assignment PIN_46 -to LED0
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED0
+set_location_assignment PIN_49 -to LED1
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED1
+set_location_assignment PIN_50 -to LED2
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED2
+set_location_assignment PIN_51 -to LED3
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED3
+set_location_assignment PIN_52 -to LED4
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED4
+set_location_assignment PIN_53 -to LED5
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED5
+set_location_assignment PIN_54 -to LED6
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED6
+set_location_assignment PIN_55 -to LED7
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to LED7
