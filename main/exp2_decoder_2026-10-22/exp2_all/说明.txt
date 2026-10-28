@@ -1,4 +1,0 @@
-综合工程：包含五个任务的原理图。
-在 Project Navigator 的 Files 里右键某个 bdf，选 Set as Top-Level Entity，
-再编译，就会生成对应任务的 .sof。
-当前顶层：task1_7447。
