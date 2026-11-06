@@ -19,13 +19,16 @@ wire [31:0] rs1_data, rs2_data;
 wire [31:0] immediate_i = {{20{instruction_data[31]}}, instruction_data[31:20]};
 wire [31:0] immediate_j = {{11{instruction_data[31]}}, instruction_data[31],
     instruction_data[19:12], instruction_data[20], instruction_data[30:21], 1'b0};
+wire [31:0] immediate_b = {{19{instruction_data[31]}}, instruction_data[31],
+    instruction_data[7], instruction_data[30:25], instruction_data[11:8], 1'b0};
 reg valid_instruction;
+reg register_write;
 reg [31:0] next_pc;
 reg [31:0] write_data;
 reg [31:0] alu_b;
 wire [31:0] alu_result;
 wire alu_zero;
-wire write_enable = (state == EXECUTE) && !fault && valid_instruction &&
+wire write_enable = (state == EXECUTE) && !fault && valid_instruction && register_write &&
     (next_pc[1:0] == 2'b00);
 assign instruction_address = pc;
 
@@ -39,6 +42,7 @@ regfile u_registers (
 
 always @(*) begin
     valid_instruction = 1'b0;
+    register_write = 1'b1;
     next_pc = pc + 32'd4;
     alu_b = rs2_data;
     write_data = alu_result;
@@ -50,6 +54,14 @@ always @(*) begin
         7'b0110011: begin
             valid_instruction = (instruction_data[14:12] == 3'b000) &&
                 (instruction_data[31:25] == 7'b0000000);
+        end
+        7'b1100011: begin
+            register_write = 1'b0;
+            valid_instruction = (instruction_data[14:12] == 3'b000) ||
+                (instruction_data[14:12] == 3'b001);
+            if ((instruction_data[14:12] == 3'b000 && rs1_data == rs2_data) ||
+                (instruction_data[14:12] == 3'b001 && rs1_data != rs2_data))
+                next_pc = pc + immediate_b;
         end
         7'b1101111: begin
             valid_instruction = 1'b1;
@@ -83,8 +95,8 @@ always @(posedge clk or negedge rst_n) begin
                 retired <= 1'b1;
                 retired_pc <= pc;
                 retired_instruction <= instruction_data;
-                retired_rd <= rd;
-                retired_data <= (rd == 0) ? 32'd0 : write_data;
+                retired_rd <= register_write ? rd : 5'd0;
+                retired_data <= (!register_write || rd == 0) ? 32'd0 : write_data;
             end
         end
     end

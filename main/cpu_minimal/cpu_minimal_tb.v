@@ -25,6 +25,14 @@ function [31:0] jal;
     begin jal = {offset[20], offset[10:1], offset[11], offset[19:12], rd, 7'b1101111}; end
 endfunction
 
+function [31:0] branch;
+    input [4:0] rs1, rs2;
+    input [2:0] funct3;
+    input [12:0] offset;
+    begin branch = {offset[12], offset[10:5], rs2, rs1, funct3,
+        offset[4:1], offset[11], 7'b1100011}; end
+endfunction
+
 task reset_cpu;
     begin
         @(negedge clk); rst_n = 0;
@@ -124,6 +132,54 @@ initial begin
     expect_retire(0, 1, 4);
     expect_fault(256);
     $display("PASS: ROM address range does not alias");
+    @(negedge clk); rst_n = 0;
+    rom.words[0] = addi(1, 0, 12'd0);
+    rom.words[1] = addi(2, 0, 12'd3);
+    rom.words[2] = addi(1, 1, 12'd1);
+    rom.words[3] = branch(1, 2, 3'b001, -13'd4);
+    rom.words[4] = branch(1, 2, 3'b000, 13'd8);
+    rom.words[5] = addi(3, 0, 12'd99);
+    rom.words[6] = branch(1, 2, 3'b001, 13'd8);
+    rom.words[7] = branch(1, 0, 3'b000, 13'd8);
+    rom.words[8] = addi(4, 0, 12'd7);
+    reset_cpu;
+    expect_retire(0, 1, 0);
+    expect_retire(4, 2, 3);
+    expect_retire(8, 1, 1);
+    expect_retire(12, 0, 0);
+    expect_retire(8, 1, 2);
+    expect_retire(12, 0, 0);
+    expect_retire(8, 1, 3);
+    expect_retire(12, 0, 0);
+    expect_retire(16, 0, 0);
+    expect_retire(24, 0, 0);
+    expect_retire(28, 0, 0);
+    expect_retire(32, 4, 7);
+    if (dut.u_registers.registers[1] !== 3 ||
+        dut.u_registers.registers[3] !== 0 || dut.u_registers.registers[4] !== 7 ||
+        dut.u_registers.registers[8] !== 0 || dut.u_registers.registers[29] !== 0)
+        $fatal(1, "branch changed registers or failed to skip");
+    $display("PASS: BEQ/BNE taken and not taken, countdown-free counting loop, no branch writeback");
+
+    @(negedge clk); rst_n = 0;
+    rom.words[0] = branch(0, 0, 3'b000, 13'd2);
+    reset_cpu;
+    expect_fault(0);
+    $display("PASS: taken misaligned branch faults");
+
+    @(negedge clk); rst_n = 0;
+    rom.words[0] = branch(0, 0, 3'b001, 13'd2);
+    rom.words[1] = addi(1, 0, 12'd9);
+    reset_cpu;
+    expect_retire(0, 0, 0);
+    expect_retire(4, 1, 9);
+    $display("PASS: untaken misaligned branch target does not fault");
+
+    @(negedge clk); rst_n = 0;
+    rom.words[0] = branch(0, 0, 3'b100, 13'd4);
+    reset_cpu;
+    expect_fault(0);
+    $display("PASS: unsupported branch condition faults");
     $display("PASS: all CPU scenarios passed");
     $finish;
 end
