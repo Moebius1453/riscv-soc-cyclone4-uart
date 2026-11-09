@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="670" viewBox="0 0 1100 670" role="img" aria-labelledby="title desc">
+<title id="title">最小 RISC-V CPU 当前架构</title><desc id="desc">同步指令 ROM 与两拍 CPU 连接，寄存器堆、ALU、分支比较和写回组成执行通路。UART 为独立实验，尚未与 CPU 连接。</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#53657d" stroke-width="1.5"/></marker></defs>
+<rect width="1100" height="670" rx="16" fill="#f5f7fb"/>
+<g font-family="Segoe UI,Microsoft YaHei,sans-serif" fill="#17263d">
+<text x="40" y="46" font-size="25">从指令到执行结果</text><text x="40" y="76" font-size="15" fill="#52647d">当前实现：ADDI / ADD / JAL / BEQ / BNE · 仿真验证，尚未综合或上板</text>
+<rect x="245" y="105" width="815" height="395" rx="16" fill="#eaf0fb" stroke="#a8bbd6"/>
+<text x="270" y="136" font-size="18">cpu_minimal · FETCH / EXECUTE 两拍控制</text>
+<g fill="#fff" stroke="#a8bbd6" stroke-width="1.5">
+<rect x="40" y="175" width="170" height="115" rx="10"/>
+<rect x="280" y="175" width="150" height="90" rx="10"/>
+<rect x="475" y="175" width="175" height="90" rx="10"/>
+<rect x="700" y="175" width="160" height="90" rx="10"/>
+<rect x="900" y="175" width="130" height="90" rx="10"/>
+<rect x="475" y="325" width="175" height="90" rx="10"/>
+<rect x="700" y="325" width="160" height="90" rx="10"/>
+<rect x="280" y="325" width="150" height="90" rx="10"/>
+</g>
+<g text-anchor="middle" font-size="17">
+<text x="125" y="208">同步指令 ROM</text><text x="125" y="234" font-size="14">64 × 32 位</text><text x="125" y="259" font-size="14">一拍读延迟</text>
+<text x="355" y="211">译码与立即数</text><text x="355" y="238" font-size="14">I / J / B 格式</text>
+<text x="562" y="211">寄存器堆</text><text x="562" y="238" font-size="14">32 × 32 位 · x0 恒零</text>
+<text x="780" y="211">ALU 加法通路</text><text x="780" y="238" font-size="14">复用已有 alu.v</text>
+<text x="965" y="211">写回选择</text><text x="965" y="238" font-size="14">结果 / PC+4</text>
+<text x="562" y="362">分支比较</text><text x="562" y="389" font-size="14">相等 / 不等</text>
+<text x="780" y="362">下一 PC 选择</text><text x="780" y="389" font-size="14">PC+4 / PC+偏移</text>
+<text x="355" y="362">PC 寄存器</text><text x="355" y="389" font-size="14">字节地址</text>
+</g>
+<g fill="none" stroke="#53657d" stroke-width="2" marker-end="url(#arrow)">
+<path d="M210 220 H280"/><path d="M430 220 H475"/><path d="M650 220 H700"/><path d="M860 220 H900"/>
+<path d="M965 265 V295 H562 V265"/><path d="M590 265 V325"/><path d="M650 370 H700"/><path d="M700 390 H665 V455 H355 V415"/>
+<path d="M280 370 H125 V290"/><path d="M430 250 H450 V435 H750 V415"/>
+</g>
+<text x="805" y="288" font-size="13" fill="#52647d">写使能：分支不写寄存器</text>
+<text x="275" y="479" font-size="14" fill="#52647d">非法指令或实际跳转地址不对齐：fault 冻结；不是标准异常陷阱</text>
+<rect x="40" y="530" width="1020" height="100" rx="12" fill="#fff" stroke="#a8bbd6" stroke-dasharray="6 5"/>
+<text x="65" y="562" font-size="18">独立 UART 实验</text><text x="65" y="591" font-size="15">uart_rx / uart_echo / uart_tx：已有基本回显上板记录，尚未接入 CPU。</text>
+<text x="65" y="614" font-size="14" fill="#52647d">后续方向：数据访存与 MMIO，再由 CPU 驱动串口；当前没有数据 RAM、C 固件或 RTOS。</text>
+</g></svg>
