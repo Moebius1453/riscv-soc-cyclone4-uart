@@ -113,12 +113,15 @@ initial begin
     $display("PASS: x0, dependencies, sign extension, wraparound and bidirectional JAL");
 
     @(negedge clk); rst_n = 0;
-    rom.words[0] = 32'h402081b3;
-    reset_cpu;
-    expect_fault(0);
-    if (dut.u_registers.registers[3] !== 0) $fatal(1, "invalid instruction wrote register");
-    $display("PASS: unsupported SUB faults without retirement");
-
+	 rom.words[0] = addi(3, 0, 12'd7);
+	 rom.words[1] = 32'h402081b3;
+	 reset_cpu;
+	 expect_retire(0, 3, 7);
+	 expect_fault(4);
+	 if (dut.u_registers.registers[3] !== 7)
+		 $fatal(1, "unsupported SUB changed x3");
+	 $display("PASS: unsupported SUB preserves x3");
+	 
     @(negedge clk); rst_n = 0;
     rom.words[0] = jal(1, 21'd2);
     reset_cpu;
